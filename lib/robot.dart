@@ -1,5 +1,7 @@
 library robot;
 
+import 'dart:collection';
+
 import 'direction.dart';
 import 'planet.dart';
 
@@ -12,24 +14,65 @@ class RobotError extends RuntimeError {
 
 class Robot {
   /// List of commands for quick lookup
-  Map<String, Command> commands = new Map<String, Command>(); // <CommandChar, Command>
+  Map<String, Command> commandLibrary = new Map<String, Command>(); // <CommandChar, Command>
   /// What direction is the robot facing?
   Direction facing;
   /// What is the current position in the grid of the robot?
   Point position;
 
-  Robot(String facingChar, String positonString, List<Command> commandList) {
+  bool _isActive = true;
+  /// Is the robot still active (or has it "died" "been lost" etc...?
+  /// Readonly getter
+  bool get isActive => _isActive;
+
+  /// The list of commands that the robot needs to process
+  Queue<String> commandQueue = new Queue<String>();
+
+  Robot(String initialization, String commandsToProcess, List<Command> availableCommands) {
+    if (initialization == null || initialization.length == 0) throw new ArgumentError("initialization");
+    // initialization should contain three distinct elements.  First two are the position, third is the facing.
+    var elements = initialization.trim().split(" ");
+    if (elements.length != 3) throw new ArgumentError("initialization should contain three distinct elements");
+
     // lookup the correct facing (if one exists for the char)
     // non-existance also acts as validation of the input char.
+    // element 0 and 1 represent the X and Y starting position
+    var positionString = "${elements[0]} ${elements[1]}";
     MajorCompassFacing.initialize();
-    this.facing = MajorCompassFacing.facings[facingChar.toUpperCase()];
+    if (positionString == null) throw new ArgumentError("positionString must not be null");
+    this.position = new Point.fromString(positionString);
+
+    // element 2 is the facing
+    this.facing = MajorCompassFacing.facings[elements[2]];
     if (this.facing == null) throw new ArgumentError("facingChar must be one of N E S W");
-    if (positonString == null) throw new ArgumentError("positionString must not be null");
-    this.position = new Point.fromString(positonString);
 
     /// insert the commands into the command map for quick lookup.
-    if (commandList == null) throw new ArgumentError("commandList");
-    commandList.forEach((command) => commands[command.commandChar] = command);
+    if (availableCommands == null) throw new ArgumentError("availableCommands");
+    availableCommands.forEach((command) => commandLibrary[command.commandChar] = command);
+
+    /// insert the commands to run into a queue
+    if (commandsToProcess == null) throw new ArgumentError("commandsToProcess");
+    for (int i = 0; i < commandsToProcess.length; i++) {
+      commandQueue.add(commandsToProcess[i]);
+    }
+  }
+
+
+  /// Return true if the robot still has commands to process
+  bool get hasCommands => !this.commandQueue.isEmpty;
+
+  /// Returns true if the robot is still active, whether or not there
+  /// are still commands to process.  Callers should check the [hasCommands]
+  /// property.
+  bool runNextCommand(planet) {
+    var result = true;
+
+    if (hasCommands) {
+      var nextCommand = commandQueue.removeFirst();
+      result = runCommand(nextCommand, planet);
+    }
+
+    return result;
   }
 
   /**
@@ -42,10 +85,10 @@ class Robot {
   bool runCommand(String commandChar, planet) {
     if (planet == null) throw new ArgumentError("planet");
 
-    var command = commands[commandChar.toUpperCase()];
+    var command = commandLibrary[commandChar.toUpperCase()];
     if (command == null) throw new RobotError("I don't understand command: $commandChar");
 
-    if (this._isActive) {
+    if (this.isActive) {
       /// run the command
       var result = command.execute(this);
 
@@ -54,13 +97,8 @@ class Robot {
       _applyPositionChange(result, planet);
     }
 
-    return this._isActive;
+    return this.isActive;
   }
-
-  // private fields
-
-  /// Is the robot still active (or has it "died" "been lost" etc...?
-  bool _isActive = true;
 
   // private methods
 
@@ -84,15 +122,22 @@ class Robot {
     if (result.position != this.position) {
       // could the new position result in the robot being lost?
       if (planet.isOutOfBounds(result.position)) {
-        // but if there is a "robot scent" in the current position,
-        // we can safely ignore the "movement" command and stay where
-        // we are.
-        if (!planet.hasRobotScent(this.position)) {
-          // no scent, so we're lost.
+        if (planet.hasRobotScent(this.position)) {
+          // but if there is a "robot scent" in the current position,
+          // we can safely ignore the "movement" command and stay where
+          // we are.  
+          // Therefore NOOP          
+        }
+        else {
+          // no scent, so we're LOST.
           planet.addScent(this.position); // leave our own scent in position we moved from
           this._isActive = false; // set ourself to be no-longer active
           this.position = result.position; // recourd our new "Lost" position
         }
+      }
+      else {
+        // not out of bounds
+        this.position = result.position; // recourd our new position
       }
     }
   }

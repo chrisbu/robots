@@ -25,7 +25,9 @@ class Planet {
   bool hasRobotScent(Point position) {
     var matchingPosition = null;
     // find the first position in the list that matches the input position
-    matchingPosition = _robotScents.firstWhere((el) => el == position);
-    return matchingPosition != null; // if not null, then there's a scent.
+    return _robotScents.contains(position);
+    //return matchingPosition != null; // if not null, then there's a scent.
   }
+
+  addScent(Point position) => _robotScents.add(position);
 }

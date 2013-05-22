@@ -60,10 +60,10 @@ class MajorCompassFacing implements Direction {
 
   static final facings = new Map<String, MajorCompassFacing>();
 
-  static final NORTH = new MajorCompassFacing._(NORTH_CHAR, (p) => p..y = p.y + 1);
-  static final EAST = new MajorCompassFacing._(EAST_CHAR, (p) => p..x = p.x + 1);
-  static final SOUTH = new MajorCompassFacing._(SOUTH_CHAR, (p) => p..y = p.y - 1);
-  static final WEST = new MajorCompassFacing._(WEST_CHAR, (p) => p..x = p.x - 1);
+  static final NORTH = new MajorCompassFacing._(NORTH_CHAR, (p) => new Point(p.x,p.y + 1));
+  static final EAST = new MajorCompassFacing._(EAST_CHAR, (p) => new Point(p.x + 1, p.y));
+  static final SOUTH = new MajorCompassFacing._(SOUTH_CHAR, (p) => new Point(p.x, p.y - 1));
+  static final WEST = new MajorCompassFacing._(WEST_CHAR, (p) => new Point(p.x - 1, p.y));
 
   static final _directionCycle = new List(5);
   static List get directionCycle => _directionCycle;
