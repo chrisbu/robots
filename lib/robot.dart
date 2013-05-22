@@ -83,6 +83,7 @@ class Robot {
    * false.
    */
   bool runCommand(String commandChar, planet) {
+    print("Running: $commandChar");
     if (planet == null) throw new ArgumentError("planet");
 
     var command = commandLibrary[commandChar.toUpperCase()];

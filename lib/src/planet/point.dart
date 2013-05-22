@@ -52,15 +52,16 @@ class Point {
 
   /// Allows greater-than comparison with another point.  If **either** of the
   /// X or Y coordinates are greater, returns true.
-  operator >(other) {
-    if (other == null || other is! Point) return throw new ArgumentError(other);
+  operator >(Point other) {
+    print("Other: $other");
+    if (other == null) return throw new ArgumentError("other is null or not a point: $other");
     return this.x > other.x || this.y > other.y;
   }
 
   /// Allows less-than comparison with another point.  If **either** of the
   /// X or Y coordinates are less, returns true.
-  operator <(other) {
-    if (other == null || other is! Point) return throw new ArgumentError(other);
+  operator <(Point other) {
+    if (other == null) return throw new ArgumentError(other);
     return this.x < other.x || this.y < other.y;
   }
 
