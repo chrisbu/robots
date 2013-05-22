@@ -133,11 +133,10 @@ class Robot {
           // no scent, so we're LOST.
           planet.addScent(this.position); // leave our own scent in position we moved from
           this._isActive = false; // set ourself to be no-longer active
-          this.position = result.position; // recourd our new "Lost" position
         }
       }
       else {
-        // not out of bounds
+        // not out of bounds, so record the new position.s
         this.position = result.position; // recourd our new position
       }
     }
