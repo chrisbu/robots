@@ -1,6 +1,7 @@
 library robot;
 
 import 'direction.dart';
+import 'planet.dart';
 
 part 'src/robot/commands.dart';
 

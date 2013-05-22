@@ -1,7 +1,6 @@
 library direction;
 
 import 'package:robot/planet.dart';
-export 'package:robot/planet.dart';
 
 /// Translate the current position to a new position for the current
 /// direction instance.
