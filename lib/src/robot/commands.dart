@@ -42,12 +42,7 @@ class MoveForwardCommand implements Command {
   final commandChar = "F";
   CommandResult execute(Robot robot) {
     if (robot == null) throw new ArgumentError("robot");
-    Position pos = robot.position;
-    print(pos);
-    print(robot.facing);
     var result = robot.facing.move(robot.position);
-    print(result is Position);
-    print(result);
     return new CommandResult(result, robot.facing);
   }
 }
