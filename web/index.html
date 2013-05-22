@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>index</title>
+  </head>
+
+  <body>
+    <style>
+      textarea, pre {
+        width:50%;
+        height:200px;
+      }
+    </style>
+    <h2>Martian Robots</h2>
+    <p>Input</p>
+    <textarea id="input"></textarea>
+    <button id="run">Run</button><button id="clearInput">Clear Input</button>
+    <pre id="output"></pre>
+    <button id="clearOutput">Clear Output</button>
+    <script type="application/dart" src="index.dart"></script>
+    <!-- for this next line to work, your pubspec.yaml file must have a dependency on 'browser' -->
+    <script src="dart.js"></script>
+  </body>
+</html>

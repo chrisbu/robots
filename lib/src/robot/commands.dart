@@ -3,9 +3,13 @@ part of robot;
 /// Wrapper to contain the result of the command, which may modify either
 /// the position, direction, or both (or neither).
 class CommandResult {
-  Point position;
+  Position position;
   Direction facing;
-  CommandResult(this.position, this.facing);
+  CommandResult(pos, facing) {
+    print(pos);
+    this.position = new Position(pos.x,pos.y);
+    this.facing = facing;
+  }
 }
 
 /// Interface to define the command.  [execute] the command to
@@ -38,6 +42,12 @@ class MoveForwardCommand implements Command {
   final commandChar = "F";
   CommandResult execute(Robot robot) {
     if (robot == null) throw new ArgumentError("robot");
-    return new CommandResult(robot.facing.move(robot.position), robot.facing);
+    Position pos = robot.position;
+    print(pos);
+    print(robot.facing);
+    var result = robot.facing.move(robot.position);
+    print(result is Position);
+    print(result);
+    return new CommandResult(result, robot.facing);
   }
 }

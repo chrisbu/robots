@@ -14,9 +14,9 @@ import 'robot.dart';
 /// top level function to carry out the mars landing project.
 /// Returns the result of all the processed commands.
 String landOnMars(String commands) {
-  if (commands == null) throw new ArgumentError("commands");
+  if (commands == null || commands.trim().length == 0) throw new ArgumentError("commands must be specified");
   List<String> commandLines = commands.replaceAll("\r\n","\n").split("\n");
-  if (commandLines.length == 0) throw new RuntimmeError("Cannot create Mars - no commands entered");
+  if (commandLines.length == 0) throw new RuntimeError("Cannot create Mars - no commands entered");
 
   var commandQueue = new Queue<String>.from(commandLines);
 
@@ -27,14 +27,14 @@ String landOnMars(String commands) {
 
   var result = new StringBuffer();
 
-  var robot = getNextRobot(commandQueue); 
+  var robot = getNextRobot(commandQueue);
   print("Got next robot: $robot");
   while (robot != null) {
     while (robot.isActive && robot.hasCommands) {
       if (!robot.runNextCommand(planetMars)) {
         break; // robot is dead.
       }
-    }       
+    }
 
     if (robot.isActive) {
       // robot lives!
@@ -69,7 +69,7 @@ Robot getNextRobot(Queue<String> commandQueue) {
   // continue while we've not got a robot
   while (!commandQueue.isEmpty && robot == null) {
     var initialization = commandQueue.removeFirst().trim(); // the contents of the command queue is modified
-    
+
     if (initialization != null && initialization.length > 0) {
       if (!commandQueue.isEmpty) {
         print("Init: $initialization");
@@ -78,7 +78,7 @@ Robot getNextRobot(Queue<String> commandQueue) {
         robot =  new Robot(initialization, robotCommands,[new TurnLeftCommand(), new TurnRightCommand(), new MoveForwardCommand()]);
       }
       else {
-        throw RuntimmeError("Robot initialization exists without commands");
+        throw new RuntimeError("Robot initialization exists without commands");
       }
     }
   }

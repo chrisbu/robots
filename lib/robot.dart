@@ -18,7 +18,7 @@ class Robot {
   /// What direction is the robot facing?
   Direction facing;
   /// What is the current position in the grid of the robot?
-  Point position;
+  Position position;
 
   bool _isActive = true;
   /// Is the robot still active (or has it "died" "been lost" etc...?
@@ -40,7 +40,7 @@ class Robot {
     var positionString = "${elements[0]} ${elements[1]}";
     MajorCompassFacing.initialize();
     if (positionString == null) throw new ArgumentError("positionString must not be null");
-    this.position = new Point.fromString(positionString);
+    this.position = new Position.fromString(positionString);
 
     // element 2 is the facing
     this.facing = MajorCompassFacing.facings[elements[2]];
@@ -126,8 +126,8 @@ class Robot {
         if (planet.hasRobotScent(this.position)) {
           // but if there is a "robot scent" in the current position,
           // we can safely ignore the "movement" command and stay where
-          // we are.  
-          // Therefore NOOP          
+          // we are.
+          // Therefore NOOP
         }
         else {
           // no scent, so we're LOST.

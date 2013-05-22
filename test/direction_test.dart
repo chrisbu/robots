@@ -1,7 +1,7 @@
 library direction_test.dart;
 
 import 'package:unittest/unittest.dart';
-
+import 'package:robot/planet.dart';
 import 'package:robot/direction.dart';
 
 /// Included to allow stand-alone execution

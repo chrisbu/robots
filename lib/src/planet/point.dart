@@ -9,7 +9,7 @@ final _MAX_DIMENSION = 50;
 
 /// Represents a point on a grid, eastings represented by [x], northings
 /// represented by [y]
-class Point {
+class Position {
   /// The position along the horizontal axis
   int get x => _x;
   set x(value) {
@@ -25,15 +25,15 @@ class Point {
   }
 
   /// Create a initialized point.
-  Point(int x, int y) {
+  Position(int x, int y) {
     this.x = x;
     this.y = y;
   }
 
-  /// Create a new [Point] from the [positionString]
+  /// Create a new [Position] from the [positionString]
   /// The input string must contain two [num] values separated
   /// by a single space.
-  Point.fromString(String positionStr) {
+  Position.fromString(String positionStr) {
     if (positionStr == null) throw new ArgumentError("positionStr");
     var elements = positionStr.split(" ");
     if (elements.length != 2) throw new ArgumentError("positionStr: $positionStr");
@@ -41,18 +41,18 @@ class Point {
     // try and extract the two elements as ints. Throw error if not valid.
     this._x = int.parse(elements[0], onError: (err) => throw new StringConversionError(err));
     this._y = int.parse(elements[1], onError: (err) => throw new StringConversionError(err));
-    _validate();
+    //_validate();
   }
 
-  /// Override == to allow direct comparison of [Point]
+  /// Override == to allow direct comparison of [Position]
   operator ==(other) {
-    if (other == null || other is! Point) return false;
+    if (other == null) return false;
     return this.x == other.x && this.y == other.y;
   }
 
   /// Allows greater-than comparison with another point.  If **either** of the
   /// X or Y coordinates are greater, returns true.
-  operator >(Point other) {
+  operator >(Position other) {
     print("Other: $other");
     if (other == null) return throw new ArgumentError("other is null or not a point: $other");
     return this.x > other.x || this.y > other.y;
@@ -60,12 +60,12 @@ class Point {
 
   /// Allows less-than comparison with another point.  If **either** of the
   /// X or Y coordinates are less, returns true.
-  operator <(Point other) {
+  operator <(Position other) {
     if (other == null) return throw new ArgumentError(other);
     return this.x < other.x || this.y < other.y;
   }
 
-  toString() => "[$x, $y]";
+  toString() => "${super.toString()}: [$x, $y]";
 
 
   // private fields
